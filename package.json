@@ -1,5 +1,5 @@
 {
-  "name": "alchemist",
+  "name": "alchemist-cli",
   "version": "1.0.1",
   "description": "A NodeJS expression CLI wrapper",
   "keywords": [

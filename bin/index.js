@@ -50,7 +50,8 @@ const index = async () => {
     {
         process.stderr.write(
             `alchemist: no expression specified\n` +
-            `usage: alc <javascript expression> [// arg1 [arg2 ...]]\n`
+            `usage: alc <javascript expression> [// arg1 [arg2 ...]]\n` +
+            `run 'alc help' to view more info\n`
         )
         process.exitCode = -2
 
@@ -58,6 +59,8 @@ const index = async () => {
     }
 
     try {
+        process.exitCode = 0
+
         const result = alchemist(expression, stdin)
 
         process.stdout.write(result)

@@ -5,6 +5,37 @@ const ss = require("./ss")
 const CR = "\r"
 const LF = "\n"
 const CRLF = CR + LF
+const EMPTY = ""
+
+/**
+ * Prints help
+ */
+const help = () => {
+    const ind = "    "
+    const message = [
+        "alchemist: help",
+        "",
+        "usage: alc <javascript expression> [// arg1 [arg2 ...]]",
+        ind + "expression - a valid Javascript expression or statement",
+        ind + "argX - an argument that will be available to the expression as 'args[X]'",
+        "",
+        "Evaluated value of the expression will be written to stdout",
+        "",
+        "available variables inside expression:",
+        ind + "args - an array with command line arguments",
+        ind + "stdin - a string containing data piped through standard input",
+        ind + "tstdin - a trimmed value of stdin",
+        "",
+        "example:",
+        ind + `alc "args[0] + args[1]" // 2 3`,
+        ind + ind + `Writes 5 to stdout`,
+        ""
+    ]
+
+    return message.join(LF)
+}
+
+help.toString = () => help()
 
 /**
  * console.log wrapper
@@ -36,6 +67,21 @@ const assert = (expected, message, chain) => {
         return chain
 
     throw `Alchemist assertion failed: ${message ?? 'no message provided'}`
+}
+
+/**
+ * Sets the process.exitCode to `code` if set or `0` otherwise
+ * @param {number?} code new code
+ * @param {any?} chain optional parameter that is returned
+ * @returns {number | any} chain object if not null, process.exitCode otherwise
+ */
+const exitCode = (code, chain) => {
+    if(code === undefined)
+        code = 0
+
+    process.exitCode = code
+
+    return chain ?? code
 }
 
 /**
@@ -112,9 +158,12 @@ module.exports = {
         CR,
         LF,
         CRLF,
+        EMPTY,
+        help,
         log,
         error,
         assert,
+        exitCode,
         file
     }
 }

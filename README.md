@@ -1,16 +1,29 @@
 # alchemist
-A simple command line wrapper for Javascript expressions and more
+A simple command line wrapper for Javascript expressions and more  
+
+[![npm version](https://badge.fury.io/js/alchemist-cli.svg)](https://badge.fury.io/js/alchemist-cli)
 
 > [!NOTE]
 > This tool is still in its development stage. Feel free to contribute.
 
+## Prerequisites
+This project requires [NodeJS and NPM](https://nodejs.org/en).
+
 ## Installation
+
+#### A. Stable version
+Install as a global module from [npm registry](https://www.npmjs.com/package/alchemist-cli)
+```
+npm install -g alchemist-cli
+```
+
+#### B. Latest features from git
 Clone this repository
 ```
 git clone https://github.com/vaexey/alchemist.git
 cd alchemist
 ```
-Install as a global module
+Install as a global module from source
 ```
 npm install -g
 ```
@@ -85,7 +98,12 @@ alc "@if(args[0] > args[1]) return 'left\n'; return 'right\n';" // 1 2
 alc "str = args[0].ss; if(str[-2] === '.') str[-2] = ''; str" // abc
 ```
 
-8. Any valid NodeJS expression you can come up with
+8. Return an exit code
+```
+alc "exitCode(args[0]);EMPTY" // -1
+```
+
+9. Any valid NodeJS expression you can come up with
 ```
 alc "require('crypto').createHash('sha256').update(args.join(' ')).digest('base64') + CRLF" // some text to be hashed
 ```
@@ -144,6 +162,7 @@ Constants:
 const CR = "\r";
 const LF = "\n";
 const CRLF = CR + LF;
+const EMPTY = "";
 ```
 
 Runtime variables:
@@ -180,6 +199,7 @@ Object.prototype.ss // returns a 'ss' string wrapper (TODO: docs)
 ## Why?
 Someone may ask *Why would one use alchemist when there are already tools like sed and awk?*  
 As far as I am concerned, these tools are widely used and loved by the community, but they pose certain entry barriers for newbies. Alchemist provides ease of use for those who already had written some code in Javascript and do not want to spend time reading manuals.
+###### TLDR: Manuals bad, Javascript good
 
 ## License
-The software is licensed under 3-Clause BSD NON-AI License
+The software is licensed under [3-Clause BSD NON-AI License](https://github.com/vaexey/alchemist/blob/master/LICENSE).

@@ -30,6 +30,24 @@ describe("fills functions", () => {
         fills.assert(true, "123")
         expect(fills.assert(true, "123", obj)).toBe(obj)
     })
+
+    test("exitCode", () => {
+        process.exitCode = undefined
+        fills.exitCode(0)
+        expect(process.exitCode).toBe(0)
+
+        process.exitCode = undefined
+        fills.exitCode(1)
+        expect(process.exitCode).toBe(1)
+
+        const obj = { a: 1 }
+
+        process.exitCode = undefined
+        const chained = fills.exitCode(2, obj)
+
+        expect(process.exitCode).toBe(2)
+        expect(chained).toBe(obj)
+    })
 })
 
 describe("object extensions", () => {

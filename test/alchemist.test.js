@@ -7,7 +7,7 @@ describe("alchemist extractArgs", () => {
             .extractArgs(
                 `console.log('a') // arg1 arg2 test`
             )
-        expect(args).toEqual(['arg1', 'arg2', 'test'])
+        expect(args).toEqual([`console.log('a') `, 'arg1', 'arg2', 'test'])
     })
 
     test("Parse args after simple quoted delimeter", () => {
@@ -16,7 +16,7 @@ describe("alchemist extractArgs", () => {
             .extractArgs(
                 `console.log('//') // arg1 arg2 test`
             )
-        expect(args).toEqual(['arg1', 'arg2', 'test'])
+        expect(args).toEqual([`console.log('//') `, 'arg1', 'arg2', 'test'])
     })
 
     test("Parse args after multiple quoted delimeters", () => {
@@ -25,7 +25,7 @@ describe("alchemist extractArgs", () => {
             .extractArgs(
                 `console.log('//' + "abc//" + "//def") // arg1 arg2 test`
             )
-        expect(args).toEqual(['arg1', 'arg2', 'test'])
+        expect(args).toEqual([`console.log('//' + "abc//" + "//def") `, 'arg1', 'arg2', 'test'])
     })
 
     test("Parse args after multiple quoted delimeters with escape character", () => {
@@ -34,7 +34,7 @@ describe("alchemist extractArgs", () => {
             .extractArgs(
                 `console.log('//' + "abc//" + "//def\\"") // arg1 arg2 test`
             )
-        expect(args).toEqual(['arg1', 'arg2', 'test'])
+        expect(args).toEqual([`console.log('//' + "abc//" + "//def\\"") `, 'arg1', 'arg2', 'test'])
     })
     
     // TODO:

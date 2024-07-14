@@ -52,13 +52,20 @@ const index = async () => {
             `alchemist: no expression specified\n` +
             `usage: alc <javascript expression> [// arg1 [arg2 ...]]\n`
         )
+        process.exitCode = -2
 
         return
     }
 
-    const result = alchemist(expression, stdin)
+    try {
+        const result = alchemist(expression, stdin)
 
-    process.stdout.write(result)
+        process.stdout.write(result)
+    } catch (error) {
+        process.stderr.write(error + "\n")
+        process.exitCode = -1
+    }
+
 }
 
-index()
+module.exports = index()

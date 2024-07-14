@@ -1,4 +1,5 @@
 const fs = require('fs')
+const ss = require("./ss")
 
 /* Shortcut constants */
 const CR = "\r"
@@ -21,6 +22,20 @@ const error = (...args) => {
     console.error.call(console, ...args)
 
     throw `Alchemist exception: ${args[0] ?? 'error was called'}`
+}
+
+/**
+ * throws an exception with message when 'expected' value is not true
+ * @param {boolean} expected must be === true to pass assertion
+ * @param {string?} message optional message appended to exception
+ * @param {object?} chain optional parameter that is returned when assertion is satisfied
+ * @returns {object?} chain argument
+ */
+const assert = (expected, message, chain) => {
+    if(expected === true)
+        return chain
+
+    throw `Alchemist assertion failed: ${message ?? 'no message provided'}`
 }
 
 /**
@@ -98,6 +113,8 @@ module.exports = {
         LF,
         CRLF,
         log,
+        error,
+        assert,
         file
     }
 }

@@ -12,12 +12,24 @@ const DEFAULT_OBJECT = "stdin"
 const alchemist = (expression, data) => {
     const args = extractArgs(expression)
 
+    expression = args.shift()
+
     const variables = {
         stdin: data,
+        tstdin: data.trim(),
         args
     }
 
-    if(expression.startsWith("."))
+    if(expression.startsWith("@"))
+    {
+        expression = expression.substring(1)
+
+        if(expression.startsWith("."))
+            expression = DEFAULT_OBJECT + expression
+
+        expression = `(() => {${expression}})();`
+    }
+    else if(expression.startsWith("."))
         expression = DEFAULT_OBJECT + expression
 
     const result = fills.evaluate(
@@ -73,9 +85,12 @@ const extractArgs = (expression) => {
     
     const argIndex = sanitized.indexOf("//")
     if(argIndex === -1)
-        return []
+        return [expression]
 
-    return sanitized.substring(argIndex + 2).trim().split(" ")
+    return [
+        expression.substring(0, expression.length - sanitized.length + argIndex),
+        ...sanitized.substring(argIndex + 2).trim().split(" ")
+    ]
 }
 
 module.exports = alchemist

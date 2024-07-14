@@ -16,8 +16,15 @@ npm install -g
 ```
 
 ## Usage
+Full command line syntax:
 ```
 alc|alchemist <javascript expression> [// arg1 [arg2 ...]]
+```
+Quick start:
+```
+$ echo GHI | alc "'Hello world! ' + args[0] + CRLF + stdin" // ABC DEF
+Hello world! ABC
+GHI
 ```
 
 ## Examples
@@ -52,12 +59,14 @@ alc "file(args[0]).json().key1.key2[1].toFile(args[1])" // file.json output.txt
 
 3. Create variables and conditionals
 ```
-alc "content = file(stdin); content ? content.length : log('-1')"
+alc "content = file(tstdin); content ? content.length : log('-1')"
 ```
 
 4. Handle errors
 ```
-alc "(file(stdin) ?? error(\`Could not read file ${stdin}\`)).length"
+alc "(file(tstdin) ?? error(\`Could not read file \${tstdin}\`)).length"
+
+alc "content = file(tstdin); assert(content != null, \`Could not read file \${tstdin}\`, content).length"
 ```
 
 5. Calculate documented arithmetic operations
@@ -65,7 +74,18 @@ alc "(file(stdin) ?? error(\`Could not read file ${stdin}\`)).length"
 alc "address = args[0]; opcode = args[1]; address_width = 5; (opcode << address_width) + address + CRLF" // 85 4
 ```
 
-6. Any valid NodeJS expression you can come up with
+6. Use `return` keyword in a function expression  
+*Notice: Prepending an expression with an `@` wraps it into a function body that is immediately called which allows using this keyword*
+```
+alc "@if(args[0] > args[1]) return 'left\n'; return 'right\n';" // 1 2
+```
+
+7. Remove second to last character in string if it matches
+```
+alc "str = args[0].ss; if(str[-2] === '.') str[-2] = ''; str" // abc
+```
+
+8. Any valid NodeJS expression you can come up with
 ```
 alc "require('crypto').createHash('sha256').update(args.join(' ')).digest('base64') + CRLF" // some text to be hashed
 ```
@@ -106,15 +126,24 @@ alc "args[0] + LF" // abc
 alc "args[0] + CRLF" // abc
 ```
 
+4. Usually, the `stdin` constant contains stray whitespace characters, such as new line at the end.  
+To prevent these from malforming the input, use the `tstdin` variable to reference the result of `.trim()` function on the `stdin` value.
+```
+// Bad - stray new line character makes the path invalid
+echo file.json | alc "file(stdin)"
+// Good
+echo file.json | alc "file(tstdin)"
+```
+
 ## Javascript extensions
 Alchemist provides a couple of extensions to the NodeJS environment - mainly to shorten the expressions.  
 *Note: You can peek at the extensions by opening the file `fills.js`*  
 
 Constants:
 ```js
-const CR = "\r"
-const LF = "\n"
-const CRLF = CR + LF
+const CR = "\r";
+const LF = "\n";
+const CRLF = CR + LF;
 ```
 
 Runtime variables:
@@ -123,16 +152,21 @@ Runtime variables:
 // type: string
 const stdin;
 
+// stdin.trim() result
+// type: string
+const tstdin;
+
 // Contains command line arguments provided after // symbols (if any)
 // type: string[]
 const args;
 ```
 
-Aliases:
+Functions:
 ```js
-function log(...args) // console.log wrapper
-function error(...args) // console.error wrapper that throws exception on call
-function file(path, options?) // fs.readFileSync wrapper
+function log(...args); // console.log wrapper
+function error(...args); // console.error wrapper that throws exception on call
+function file(path, options?); // fs.readFileSync wrapper
+function assert(expected, message?, chain?); // throws exception when 'expected' is not === true
 ```
 
 Prototype extensions:
@@ -140,6 +174,7 @@ Prototype extensions:
 Object.prototype.json(reviver?) // JSON.parse wrapper for 'this' casted to string
 Object.prototype.toJson(pretty?) // JSON.stringify wrapper with pretty print switch for 'this' object
 Object.prototype.toFile(path, options?) // fs.writeFileSync wrapper with 'this' casted to string as the file contents
+Object.prototype.ss // returns a 'ss' string wrapper (TODO: docs)
 ```
 
 ## Why?

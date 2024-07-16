@@ -1,10 +1,18 @@
 # alchemist
-A simple command line wrapper for Javascript expressions and more  
 
-[![npm version](https://badge.fury.io/js/alchemist-cli.svg)](https://badge.fury.io/js/alchemist-cli)
-
+[![npm version](https://badge.fury.io/js/alchemist-cli.svg)](https://badge.fury.io/js/alchemist-cli)  
 > [!NOTE]
 > This tool is still in its development stage. Feel free to contribute.
+
+A simple command line wrapper for Javascript expressions and more  
+
+**snake_case** to **PascalCase** conversion comparison between `sed` and `alchemist`:
+```
+$ cat snake_case | sed -E 's/[_]([a-z])/\U\1/gi;s/^([a-z])/\U\1/'
+```
+```
+$ cat snake_case | alc "stdin.split('_').map((w,i) => {w = w.ss; w[0] = w[0].toUpperCase(); return w}).join('')"
+```
 
 ## Prerequisites
 This project requires [NodeJS and NPM](https://nodejs.org/en).

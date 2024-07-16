@@ -1,4 +1,21 @@
-const fills = require('./../src/fills').inner
+const flasks = require("./../src/flasks")
+
+let data = {
+    expression: "",
+    variables: {
+        alchemist: {}
+    }
+}
+
+flasks.flasks.forEach(f => {
+    f.load()
+
+    data = f.beforeVariables(data)
+    data = f.beforeEval(data)
+    flasks.mergeVariables(data.variables, f.variables())
+})
+
+const fills = data.variables
 
 describe("fills functions", () => {
     // test("logging", () => {

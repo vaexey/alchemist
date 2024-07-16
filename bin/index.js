@@ -58,16 +58,16 @@ const index = async () => {
         return
     }
 
-    try {
+    // try {
         process.exitCode = 0
 
         const result = alchemist(expression, stdin)
 
         process.stdout.write(result)
-    } catch (error) {
-        process.stderr.write(error + "\n")
-        process.exitCode = -1
-    }
+    // } catch (error) {
+    //     process.stderr.write(error + "\n")
+    //     process.exitCode = -1
+    // }
 
 }
 

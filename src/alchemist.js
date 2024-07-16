@@ -1,7 +1,7 @@
-const fs = require('fs')
-const fills = require("./fills")
+// const fills = require("./fills")
+const flasks = require("./flasks")
 
-const DEFAULT_OBJECT = "stdin"
+// const DEFAULT_OBJECT = "stdin"
 
 /**
  * Evaluates an alchemist expression
@@ -20,21 +20,10 @@ const alchemist = (expression, data) => {
         args
     }
 
-    if(expression.startsWith("@"))
-    {
-        expression = expression.substring(1)
-
-        if(expression.startsWith("."))
-            expression = DEFAULT_OBJECT + expression
-
-        expression = `(() => {${expression}})();`
-    }
-    else if(expression.startsWith("."))
-        expression = DEFAULT_OBJECT + expression
-
-    const result = fills.evaluate(
-        expression,
-        variables
+    const result = flasks.evaluate(
+        expression, 
+        variables,
+        ['exex', 'base', 'proto', 'alias']
     )
 
     if(result === undefined)

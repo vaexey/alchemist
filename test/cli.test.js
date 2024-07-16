@@ -120,4 +120,34 @@ describe("expressions", () => {
 
         expect(stdout).toHaveBeenCalledWith("test string test")
     })
+
+    test("implicit stdin variable", async () => {
+
+        const stdout = await runAlchemistWithStdin(
+            "test string", true,
+            ".split(' ').join(',')"
+        )
+
+        expect(stdout).toHaveBeenCalledWith("test,string")
+    })
+
+    test("implicit anonymous function", async () => {
+
+        const stdout = await runAlchemistWithStdin(
+            "test string", true,
+            "@return stdin"
+        )
+
+        expect(stdout).toHaveBeenCalledWith("test string")
+    })
+
+    test("implicit stdin and anonymous function", async () => {
+
+        const stdout = await runAlchemistWithStdin(
+            "test string", true,
+            "@.length ?? console.log('not '); return stdin"
+        )
+
+        expect(stdout).toHaveBeenCalledWith("test string")
+    })
 })

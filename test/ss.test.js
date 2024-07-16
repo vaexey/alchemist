@@ -1,4 +1,7 @@
-const ss = require('./../src/ss')
+const ssflask = require('./../src/flasks/ss')
+const ss = ssflask.variables().ss
+
+ssflask.load()
 
 describe("ss instantiating", () => {
     test("new", () => {

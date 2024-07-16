@@ -1,3 +1,5 @@
+const flask = require("./flask")
+
 /**
  * A wrapper that implements various syntactic
  * sugar enchancements to the string prototype
@@ -116,14 +118,36 @@ class ss extends Function
     }
 }
 
-ss.prototype.toString = function() {
-    return this.string
+class ssflask extends flask
+{
+    constructor()
+    {
+        super()
+
+        this.id = "ss"
+        this.name = "String extensions"
+        this.description = `The 'ss' class with all its methods that make modifying strings easier.`
+    }
+
+    load()
+    {
+        ss.prototype.toString = function() {
+            return this.string
+        }
+
+        Object.defineProperty(Object.prototype, 'ss', {
+            get: function() {
+                return new ss(this)
+            }
+        })
+    }
+
+    variables()
+    {
+        return {
+            ss
+        }
+    }
 }
 
-Object.defineProperty(Object.prototype, 'ss', {
-    get: function() {
-        return new ss(this)
-    }
-})
-
-module.exports = ss
+module.exports = new ssflask()

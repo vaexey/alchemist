@@ -1,7 +1,5 @@
-// const fills = require("./fills")
 const flasks = require("./flasks")
-
-// const DEFAULT_OBJECT = "stdin"
+const config = require("./config")
 
 /**
  * Evaluates an alchemist expression
@@ -10,6 +8,8 @@ const flasks = require("./flasks")
  * @returns {string} evaluated value
  */
 const alchemist = (expression, data) => {
+    config.read()
+
     const args = extractArgs(expression)
 
     expression = args.shift()
@@ -17,13 +17,15 @@ const alchemist = (expression, data) => {
     const variables = {
         stdin: data,
         tstdin: data.trim(),
-        args
+        args,
+        availableFlasks: flasks.flasks,
+        config
     }
 
     const result = flasks.evaluate(
         expression, 
         variables,
-        ['exex', 'base', 'proto', 'alias']
+        config.flasks
     )
 
     if(result === undefined)

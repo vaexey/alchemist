@@ -97,6 +97,18 @@ class flask
     {
         return data
     }
+
+    toString()
+    {
+        const id = this.id
+        const name = this.name
+
+        return JSON.stringify({
+            id,
+            name
+        })
+        // return JSON.stringify(this)
+    }
 }
 
 module.exports = flask

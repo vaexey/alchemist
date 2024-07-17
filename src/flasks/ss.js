@@ -1,4 +1,4 @@
-const flask = require("./flask")
+const flask = require("../flask")
 
 /**
  * A wrapper that implements various syntactic

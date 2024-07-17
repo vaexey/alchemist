@@ -1,4 +1,4 @@
-const flask = require("./flask")
+const flask = require("../flask")
 const fs = require("fs")
 
 /**

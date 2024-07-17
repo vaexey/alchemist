@@ -1,6 +1,6 @@
 const _scopedEval = (___expression_, ___variables_) => {
     return eval(
-        // `'use strict';` +
+        `'use strict';` +
         Object.keys(___variables_).map(
             name => `var ${name} = ___variables_.${name};`
         ).join("") +

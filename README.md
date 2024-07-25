@@ -161,47 +161,102 @@ echo file.json | alc "file(stdin)"
 echo file.json | alc "file(tstdin)"
 ```
 
-## Javascript extensions
-Alchemist provides a couple of extensions to the NodeJS environment - mainly to shorten the expressions.  
-*Note: You can peek at the extensions by opening the file `fills.js`*  
+## Flasks
+Alchemist provides a couple of extensions to the NodeJS environment - mainly to shorten the expressions. These extensions are packed in atomic units called *flasks*.  
+A flask is loaded before expression evaluation and can contain functions that are called before certain events (load, before variable generation, before evaluation, after evauation) and expose global variables that will be available to the expression. Flasks can also have dependencies and/or conflicting flasks.  
+  
+Currently the only way to select which flasks are loaded is to define them in a config file stored in one of the valid locations eg. current working directory of `alc`.
+```json
+// alchemist.json
+{
+    "flasks": ["flask1", "flask2", "..."]
+}
+```
 
-Constants:
+Alchemist comes pre-built with a couple of available flasks.  
+*Note: You can peek at the extensions by opening directory `/src/flasks`*  
+
+### alc
+Flask that contains every basic alchemist flask as a depencency. Makes it easy to require all of them with a single keyword.
+
+### base
+The base alchemist flask - it is not advised to run alchemist without it.  
+Main features:
+* `help`/`help()` function that allows calling help like `alc help`
+* basic constants:
 ```js
 const CR = "\r";
 const LF = "\n";
 const CRLF = CR + LF;
 const EMPTY = "";
 ```
+* globalizing `alchemist` variable (which contains `args` and `stdin` by default)
+  eg. `alc alchemist.args[0]` becomes `args[0]`
 
-Runtime variables:
+### alias
+Contains basic function aliases and a couple of useful snippets  
+Aliases:
 ```js
-// Contains all data read to stdin (if any)
-// type: string
-const stdin;
-
-// stdin.trim() result
-// type: string
-const tstdin;
-
-// Contains command line arguments provided after // symbols (if any)
-// type: string[]
-const args;
+log -> console.log
+error -> console.error
+file -> fs.readFileSync
 ```
-
 Functions:
 ```js
-function log(...args); // console.log wrapper
-function error(...args); // console.error wrapper that throws exception on call
-function file(path, options?); // fs.readFileSync wrapper
-function assert(expected, message?, chain?); // throws exception when 'expected' is not === true
+// Throws an exception with message when 'expected' value is not === true
+function assert(expected, message?, chain?);
+
+// Sets the process.exitCode to `code` if set or `0` otherwise
+function exitCode(code?, chain?);
 ```
 
-Prototype extensions:
+### proto
+A more invasive flask that defines new properties on existing prototypes.  
 ```js
-Object.prototype.json(reviver?) // JSON.parse wrapper for 'this' casted to string
-Object.prototype.toJson(pretty?) // JSON.stringify wrapper with pretty print switch for 'this' object
-Object.prototype.toFile(path, options?) // fs.writeFileSync wrapper with 'this' casted to string as the file contents
-Object.prototype.ss // returns a 'ss' string wrapper (TODO: docs)
+// JSON.parse wrapper for 'this' casted to string
+Object.prototype.json(reviver?);
+
+// JSON.stringify wrapper with pretty print switch for 'this' object
+Object.prototype.toJson(pretty?);
+
+// fs.writeFileSync wrapper with 'this' casted to string as the file contents
+Object.prototype.toFile(path, options?);
+
+// isNaN wrapper with 'this' as the main argument
+Object.prototype.isNaN();
+
+// Calls parseInt from 'this' casted to string with specified radix (default: 16)
+Object.prototype.fromBase(radix?);
+
+// Converts 'this' casted to number from base 10 to base specified by radix (default: 16)
+Object.prototype.toBase(radix?);
+
+// Calls the alias `assert` on this object as `chain` with the `delegate` function
+Object.prototype.assert(delegate, message?)
+
+// Calls the alias `assert` on this object as `chain` asserting that `this == expected`
+Object.prototype.assertEqual(expected, message?)
+
+// Calls the alias `assert` on this object as `chain` asserting that `this === expected`
+Object.prototype.assertIs(expected, message?)
+```
+
+### exex
+Flask that extends shortened expressions.  
+Main features:
+* append `stdin` to an expression starting with a dot
+* wrap expression starting with a `@` in an anonymous function
+
+### ss
+Flask that implements powerful string extensions.  
+*TODO: docs*
+
+### dynflask
+Flask that provides CLI to view available/loaded flasks.  
+Commands:
+```
+alc flasks.help
+alc flasks.list
 ```
 
 ## Why?

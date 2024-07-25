@@ -20,7 +20,7 @@ const error = (...args) => {
 }
 
 /**
- * throws an exception with message when 'expected' value is not true
+ * Throws an exception with message when 'expected' value is not true
  * @param {boolean} expected must be === true to pass assertion
  * @param {string?} message optional message appended to exception
  * @param {object?} chain optional parameter that is returned when assertion is satisfied
